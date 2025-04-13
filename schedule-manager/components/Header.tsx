@@ -14,7 +14,7 @@ const Container = styled.View`
 
 const HeaderPressable = styled.Pressable`
   flex-direction: row;
-  padding: 10px;
+  padding: 20px;
 `;
 
 const HeaderText = styled.Text`
