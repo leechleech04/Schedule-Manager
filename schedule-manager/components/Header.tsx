@@ -4,7 +4,8 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import colors from '../colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { setCurrentDate } from '../store';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { Animated } from 'react-native';
 
 const Container = styled.View`
   flex: 1;
@@ -61,18 +62,38 @@ const Header = () => {
 
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
 
+  const rotateArrow = useRef(new Animated.Value(0)).current;
+
   return (
     <Container>
-      <HeaderPressable onPress={() => setIsDatePickerVisible((prev) => !prev)}>
+      <HeaderPressable
+        onPress={() => {
+          setIsDatePickerVisible((prev) => !prev);
+          Animated.timing(rotateArrow, {
+            toValue: isDatePickerVisible ? 0 : 180,
+            duration: 300,
+            useNativeDriver: true,
+          }).start();
+        }}
+      >
         <HeaderText>
           {currentDate.year}.{currentDate.month}
         </HeaderText>
         <ArrowIconWrapper>
-          {isDatePickerVisible ? (
-            <MaterialIcons name="keyboard-arrow-up" size={36} color="black" />
-          ) : (
+          <Animated.View
+            style={{
+              transform: [
+                {
+                  rotate: rotateArrow.interpolate({
+                    inputRange: [0, 180],
+                    outputRange: ['0deg', '180deg'],
+                  }),
+                },
+              ],
+            }}
+          >
             <MaterialIcons name="keyboard-arrow-down" size={36} color="black" />
-          )}
+          </Animated.View>
         </ArrowIconWrapper>
       </HeaderPressable>
       {isDatePickerVisible ? (
@@ -88,6 +109,7 @@ const Header = () => {
             mode="date"
             display="spinner"
             onChange={onDateChange}
+            locale="ko"
           />
         </DatePickerContainer>
       ) : null}
