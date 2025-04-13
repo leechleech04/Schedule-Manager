@@ -1,27 +1,22 @@
-import { View } from 'react-native';
 import Calender from './components/Calender';
-import Header from './components/Header';
 import styled from 'styled-components/native';
 import colors from './colors';
+import { Provider } from 'react-redux';
+import store from './store';
 
 const Background = styled.View`
   flex: 1;
-  padding: 80px 10px;
+  padding: 70px 10px;
   background-color: ${colors.white};
-`;
-
-const Container = styled.View`
-  flex: 1;
 `;
 
 const App = () => {
   return (
-    <Background>
-      <Container>
-        <Header />
+    <Provider store={store}>
+      <Background>
         <Calender />
-      </Container>
-    </Background>
+      </Background>
+    </Provider>
   );
 };
 
